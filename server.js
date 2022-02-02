@@ -115,7 +115,31 @@ function addEmployee() {
 }
 
 //still need to write update function
-function updateEmployeeRole() {}
+function updateEmployeeRole() {
+  inquirer
+    .prompt([{
+        type: "list",
+        message: "Which employee do you want to update?",
+        // ask for help
+        choices: ["import db table column"],
+        name: "employeeName"
+      },
+      {
+        type: "list",
+        message: "Which role do you want to assign to the selected employee?",
+        //help 
+        choices: [],
+        name: "newRole"
+      }
+    ])
+    .then(response => {
+      //get correct sql
+      db.query(`UPDATE employee SET  (title, salary, department_id) Value (${response.title}, ${response.salary}, ${response.department_id})`, function (err, results) {
+        return response;
+      });
+    })
+
+}
 
 function addRole() {
   inquirer
