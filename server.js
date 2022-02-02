@@ -9,73 +9,73 @@ const db = mysql.createConnection({
   database: "employee_db"
 });
 
-class prompt {
-  constructor() {}
+mainMenu();
 
-  mainMenu() {
-    inquirer
-      .prompt([{
-        type: "list",
-        name: "options",
-        message: "What would you like to do?",
-        choices: ["View all employees", "Add Employee", "Update Employee Role", "View All Roles", "Add Role", "View All Departments", "Add Department"],
-      }, ])
-      .then((answers) => {
-        //checking responses to ensure values are correct
-        console.log(answers.options);
+function mainMenu() {
+  inquirer
+    .prompt([{
+      type: "list",
+      name: "options",
+      message: "What would you like to do?",
+      choices: ["View all employees", "Add Employee", "Update Employee Role", "View All Roles", "Add Role", "View All Departments", "Add Department"],
+    }, ])
+    .then((answers) => {
+      //checking responses to ensure values are correct
+      console.log(answers.options);
 
-        switch (answers.options) {
-          case "View all employees":
-            //testing cases
-            console.log("View all Employee case works")
-            db.query('SELECT * FROM employee', function (err, results) {
-              let choices = results.map((employee) => ({
-                id: `${employee.id}`,
-                name: `${employee.first_name} ${employee.last_name}`
-              }));
-              console.table(choices);
-              this.buildRoster();
-            })
-            break;
-          case "Add Employee":
-            //testing cases
-            console.log("Add Employee case works")
-            addEmployee();  
-            break;
-          case "Update Employee Role":
-            console.log("Update Employee Role case works")
-            break;
-          case "View All Roles":
-            //testing cases
-            console.log("View all roles case works")
-            db.connect(function (err) {
-              if (err) throw err;
-              db.query("SELECT * FROM role;", function (err, results) {
-                if (err) throw err;
-                let choices = results.map((role) => ({
-                  id: `${role.id}`,
-                  title: `${role.title}`,
-                  department: `${role.department_id}`,
-                  salary: `${role.salary}`
-                }));
-                console.table(choices);
-              })
-            })
-            break;
-          case "View All Departments":
-            //testing cases
-            console.log("View all depts case works")
-            db.query('SELECT * FROM department', function (err, results) {
-              let choices = results.map((department) => ({
-                id: `${department.id}`,
-                department: `${department.name}`
-              }));
-              console.table(choices);
-            })
-            break;
-        }
-      });
-  }
+      switch (answers.options) {
+        case "View all employees":
+          //testing cases
+          console.log("View all Employee case works")
+          db.query('SELECT * FROM employee', function (err, results) {
+            let choices = results.map((employee) => ({
+              id: `${employee.id}`,
+              name: `${employee.first_name} ${employee.last_name}`
+            }));
+            console.table(choices);
+          })
+          mainMenu();
+          break;
+        case "Add Employee":
+          addEmployee();
+          mainMenu();
+          break;
+        case "Update Employee Role":
+          // create function below
+          console.log("Update Employee Role case works")
+          mainMenu();
+          break;
+        case "View All Roles":
+          db.query("SELECT * FROM role;", function (err, results) {
+            let choices = results.map((role) => ({
+              id: `${role.id}`,
+              title: `${role.title}`,
+              department: `${role.department_id}`,
+              salary: `${role.salary}`
+            }));
+            console.table(choices);
+          })
+          mainMenu();
+          break;
+        case "Add Role":
+          addRole();
+          break;
+        case "View All Departments":
+          db.query('SELECT * FROM department', function (err, results) {
+            let choices = results.map((department) => ({
+              id: `${department.id}`,
+              department: `${department.name}`
+            }));
+            console.table(choices);
+          })
+          mainMenu();
+          break;
+        case "Add Department":
+          addDepartment();
+          mainMenu();
+          break;
+      }
+    });
 }
 
 function addEmployee() {
@@ -94,7 +94,7 @@ function addEmployee() {
         type: "list",
         message: "What is the employee's role?",
         //figure out how to retrieve data from role table
-        choices: [db.query("SELECT * from role", function (err, result){
+        choices: [db.query("SELECT * from role", function (err, result) {
           if (err) throw err;
           return result.title;
         })],
@@ -108,28 +108,56 @@ function addEmployee() {
       }
     ])
     .then(response => {
-      console.log(response.firstName);
-      db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) Value (${response.firstname}, ${response.lastName}, ${response.role}, ${response.manager})` , function (err, results) {
-      return response;
+      db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) Value (${response.firstname}, ${response.lastName}, ${response.role}, ${response.manager})`, function (err, results) {
+        return response;
       });
     })
 }
 
+//still need to write update function
+function updateEmployeeRole() {}
 
-//   updateEmployeeRole() {
+function addRole() {
+  inquirer
+    .prompt([{
+        type: "input",
+        message: "What is the name of the role?",
+        name: "title"
+      },
+      {
+        type: "input",
+        message: "What is the salary of the role?",
+        name: "salary"
+      },
+      {
+        type: "list",
+        message: "Which department does the role belong to?",
+        //figure out how to retrieve data from role table
+        choices: [db.query("SELECT * from department", function (err, result) {
+          if (err) throw err;
+          return result;
+        })],
+        name: "department"
+      }
+    ])
+    .then(response => {
+      db.query(`INSERT INTO role (title, salary, department_id) Value (${response.title}, ${response.salary}, ${response.department_id})`, function (err, results) {
+        return response;
+      });
+    })
+}
 
-//   }
-
-//   addRole() {
-
-//   }
-
-//   addDepartment() {
-
-//   }
-
-// }
-
-// module.exports = prompt;
-
-new prompt().mainMenu();
+function addDepartment() {
+  inquirer
+    .prompt([{
+      type: "input",
+      message: "What is the name of the department?",
+      name: "deptName"
+    }])
+    .then(response => {
+      db.query(`INSERT INTO department (name) Value (${response.deptName})`, function (err, results) {
+        return response;
+      });
+      mainMenu();
+    })
+}
