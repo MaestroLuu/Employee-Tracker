@@ -45,7 +45,7 @@ class prompt {
           case "Update Employee Role":
             console.log("Update Employee Role case works")
             break;
-          case "View all Roles":
+          case "View All Roles":
             //testing cases
             console.log("View all roles case works")
             db.connect(function (err) {
@@ -62,7 +62,7 @@ class prompt {
               })
             })
             break;
-          case "View all Departments":
+          case "View All Departments":
             //testing cases
             console.log("View all depts case works")
             db.query('SELECT * FROM department', function (err, results) {
