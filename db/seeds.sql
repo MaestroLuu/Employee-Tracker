@@ -1,15 +1,18 @@
 INSERT INTO department (name)
-VALUES ("Elliot"),
-    ("John"),
-    ("Amy");
+VALUES ("Production"),
+    ("Research and Development"),
+    ("Purchasing"),
+    ("Marketing"),
+    ("Human Resource"),
+    ("Accounting and Finance");
 
-INSERT INTO role (id, title, salary)
-VALUES (department.id, "King", 60000),
-    (department.id, "Queen", 80000),
-    (department.id, "Serf", 25000);
+INSERT INTO role (title, salary)
+VALUES ("Manager", 160000),
+    ("Technician", 80000),
+    ("Consultant", 80000);
 
 INSERT INTO employee (first_name, last_name)
-VALUES ("David", "Lw"),
-    ("Jacqueline", "Sierra"),
-    ("Mickey", "Mouse");
+VALUES ("Mickey", "Mouse"),
+    ("Minnie", "Mouse"),
+    ("Donald", "Duck");
 
