@@ -11,6 +11,7 @@ const db = mysql.createConnection({
 
 mainMenu();
 
+//mainMenu is not displaying table when called after another function
 function mainMenu() {
   inquirer
     .prompt([{
@@ -22,12 +23,16 @@ function mainMenu() {
     .then((answers) => {
       switch (answers.options) {
         case "View all employees":
-          db.query('SELECT * FROM employee', function (err, results) {
-            let choices = results.map((employee) => ({
+          db.connect(function(err) {
+            if (err) throw err;
+            db.query('SELECT * FROM employee', function (err, results) {
+              let choices = results.map((employee) => ({
               id: `${employee.id}`,
-              name: `${employee.first_name} ${employee.last_name}`
+              name: `${employee.first_name} ${employee.last_name}`,
+              value: employee,
             }));
             console.table(choices);
+            });
             mainMenu();
           })
           break;
@@ -46,6 +51,7 @@ function mainMenu() {
               salary: `${role.salary}`
             }));
             console.table(choices);
+            mainMenu();
           })
           break;
         case "Add Role":
@@ -58,6 +64,7 @@ function mainMenu() {
               department: `${department.name}`
             }));
             console.table(choices);
+            mainMenu();
           })
           break;
         case "Add Department":
@@ -67,6 +74,7 @@ function mainMenu() {
     });
 }
 
+//insert function not working
 function addEmployee() {
   db.query("SELECT * FROM role", function (err, results) {
     if (err) throw err;
@@ -105,8 +113,14 @@ function addEmployee() {
           }
         ])
         .then(response => {
-          db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) Value (${response.firstname}, ${response.lastName}, ${response.role}, ${response.manager})`, function (err, results) {
-            return response;
+          db.connect(function(err) {
+            if (err) throw err;
+            const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) Value (${response.firstName}, ${response.lastName}, ${JSON.stringify(response.role)}, ${JSON.stringify(response.manager)})`;
+            console.log(sql);
+            db.query(sql, function (err, result) {
+              if (err) throw err;
+              console.log(`${response.firstname} ${response.lastName} has been added to database.`);
+            });
           });
           mainMenu();
         })
@@ -142,6 +156,7 @@ function updateEmployeeRole() {
 
 }
 
+//insert function not working
 function addRole() {
   db.query("SELECT * FROM department", function (err, results) {
     if (err) throw err;
@@ -178,6 +193,7 @@ function addRole() {
   })
 }
 
+//insert function not working
 function addDepartment() {
   inquirer
     .prompt([{
