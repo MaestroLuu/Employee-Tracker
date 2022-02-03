@@ -29,7 +29,7 @@ function mainMenu() {
               let choices = results.map((employee) => ({
               id: `${employee.id}`,
               name: `${employee.first_name} ${employee.last_name}`,
-              value: employee,
+              // value: employee,
             }));
             console.table(choices);
             });
@@ -115,9 +115,14 @@ function addEmployee() {
         .then(response => {
           db.connect(function(err) {
             if (err) throw err;
-            const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) Value (${response.firstName}, ${response.lastName}, ${JSON.stringify(response.role)}, ${JSON.stringify(response.manager)})`;
-            console.log(sql);
-            db.query(sql, function (err, result) {
+            const sql = `INSERT INTO employee SET ?`;
+            const obj = {
+              first_name: response.firstName,
+              last_name: response.lastName,
+              role_id: response.role,
+              manager_id: response.manager
+            }
+            db.query(sql, obj, function (err, result) {
               if (err) throw err;
               console.log(`${response.firstname} ${response.lastName} has been added to database.`);
             });
