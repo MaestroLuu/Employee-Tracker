@@ -74,7 +74,6 @@ function mainMenu() {
     });
 }
 
-//insert function not working
 function addEmployee() {
   db.query("SELECT * FROM role", function (err, results) {
     if (err) throw err;
@@ -135,30 +134,46 @@ function addEmployee() {
 
 //still need to write update function
 function updateEmployeeRole() {
-  inquirer
-    .prompt([{
-        type: "list",
-        message: "Which employee do you want to update?",
-        // ask for help
-        choices: ["import db table column"],
-        name: "employeeName"
-      },
-      {
-        type: "list",
-        message: "Which role do you want to assign to the selected employee?",
-        //help 
-        choices: [],
-        name: "newRole"
-      }
-    ])
-    .then(response => {
-      //get correct sql
-      db.query(`UPDATE employee SET  (title, salary, department_id) Value (${response.title}, ${response.salary}, ${response.department_id})`, function (err, results) {
-        return response;
-      });
-      mainMenu();
-    })
+  db.query("SELECT * FROM employee", function (err, results) {
+    if (err) throw err;
+    const employeeNames = results.map((employee) => ({
+      name: `${employee.first_name} ${employee.last_name}`,
+      value: employee,
+    }));
+      db.query("SELECT * FROM role", function (err, results) {
+        if (err) throw err;
+        const employeeRoles = results.map((roles) => ({
+          name: `${roles.title}`,
+          value: roles,
+        }));
+        inquirer
+          .prompt([{
+              type: "list",
+              message: "Which employee do you want to update?",
+              choices: employeeNames,
+              name: "employeeName"
+            },
+            {
+              type: "list",
+              message: "Which role do you want to assign to the selected employee?",
+              choices: employeeRoles,
+              name: "newRole"
+            }
+          ])
+          .then(response => {
+            db.connect(function(err) {
+              if (err) throw err;
+              const sql = `UPDATE employee SET ?`;
+              const obj = { role_id: response.role }
+              db.query(sql, obj, function (err, result) {
+                if (err) throw err;
+                console.log(JSON.stringify(response.employeeName) + ' has been updated to database.');
+              });
+            });
 
+          })
+      })
+  })
 }
 
 //insert function not working
@@ -209,8 +224,11 @@ function addDepartment() {
     .then(response => {
       db.connect(function (err) {
         if (err) throw err;
-        const sql = `INSERT INTO department (name) VALUES (${response.deptName});`;
-        db.query(sql, function (err, results) {
+        const sql = 'INSERT INTO department SET ?';
+        const obj = {
+          name: response.deptName
+        }
+        db.query(sql, obj, function (err, results) {
           if (err) throw err;
           console.log(response.deptName + " has been added to departments.");
         })
