@@ -11,7 +11,6 @@ const db = mysql.createConnection({
 
 mainMenu();
 
-//mainMenu is not displaying table when called after another function
 function mainMenu() {
   inquirer
     .prompt([{
@@ -23,19 +22,10 @@ function mainMenu() {
     .then((answers) => {
       switch (answers.options) {
         case "View all employees":
-          // join issues
-          db.query('SELECT e.id, e.first_name, e.last_name, r.title, r.salary, e.manager_id AS manager FROM employee AS e JOIN role as r on ON r.id = e.id;', function (err, results) {
-            const choices = results.map((employee) => ({
-              id: `${employee.id}`,
-              first_name: `${employee.first_name}`,
-              last_name: `${employee.last_name}`,
-              title: `${employee.title}`,
-              salary: `${employee.salary}`,
-              manager: `${employee.manager}`
-            }));
-            console.table(choices);
+          db.query('SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary FROM employee AS e JOIN role AS r ON r.id = e.role_id JOIN department AS d ON d.id = r.department_id;', function (err, results) {
+            console.table(results);
             mainMenu();
-          });
+          })
           break;
         case "Add Employee":
           addEmployee();
@@ -170,7 +160,8 @@ function updateEmployeeRole() {
             }
             db.query(sql, obj, function (err, result) {
               if (err) throw err;
-              console.log(JSON.stringify(response.employeeNames) + ' has been updated to database.');
+              // will modify to display name instead of id in future updates
+              // console.log(JSON.stringify(response.employeeName) + ' has been updated to database.');
               mainMenu();
             });
           });
