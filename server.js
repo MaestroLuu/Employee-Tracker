@@ -23,11 +23,15 @@ function mainMenu() {
     .then((answers) => {
       switch (answers.options) {
         case "View all employees":
-          db.query('SELECT * FROM employee', function (err, results) {
-            let choices = results.map((employee) => ({
+          // join issues
+          db.query('SELECT e.id, e.first_name, e.last_name, r.title, r.salary, e.manager_id AS manager FROM employee AS e JOIN role as r on ON r.id = e.id;', function (err, results) {
+            const choices = results.map((employee) => ({
               id: `${employee.id}`,
-              name: `${employee.first_name} ${employee.last_name}`,
-              role_id: `${employee.role_id}`,
+              first_name: `${employee.first_name}`,
+              last_name: `${employee.last_name}`,
+              title: `${employee.title}`,
+              salary: `${employee.salary}`,
+              manager: `${employee.manager}`
             }));
             console.table(choices);
             mainMenu();
