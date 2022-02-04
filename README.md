@@ -26,6 +26,11 @@ To use this application, clients must first install the npm packages "inquirer",
 
 ## Credits
 
+I want to thank the following developers for providing feedback and review during the development of this application: <br>
+- [Chris Muto](https://github.com/chrismuto)
+- [Marco Flores](https://github.com/JaggedComet/) 
+
+
 I utilized the NPM packages inquirer, mysql2, and console.table for this project. Their links to the packages can be found below:<br> 
 - https://www.npmjs.com/package/inquirer<br>
 - https://www.npmjs.com/package/mysql2 <br>
