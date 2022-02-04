@@ -65,7 +65,6 @@ function mainMenu() {
     });
 }
 
-//resolved
 function addEmployee() {
   db.query("SELECT * FROM role", function (err, results) {
     if (err) throw err;
@@ -121,7 +120,6 @@ function addEmployee() {
   })
 }
 
-//still need to write update function
 function updateEmployeeRole() {
   db.query("SELECT * FROM employee", function (err, results) {
     if (err) throw err;
@@ -151,7 +149,6 @@ function updateEmployeeRole() {
           }
         ])
         .then(response => {
-          // console.log(response.employeeName);
           db.connect(function (err) {
             if (err) throw err;
             const sql = `UPDATE employee SET ? WHERE id = ${response.employeeName}`;
@@ -171,7 +168,6 @@ function updateEmployeeRole() {
   })
 }
 
-//resolved
 function addRole() {
   db.query("SELECT * FROM department", function (err, results) {
     if (err) throw err;
@@ -216,7 +212,6 @@ function addRole() {
   })
 }
 
-//resolved
 function addDepartment() {
   inquirer
     .prompt([{
