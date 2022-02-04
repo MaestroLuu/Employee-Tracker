@@ -2,13 +2,13 @@
   "name": "mysql-inquirer",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "John Desrosiers <john.desro@gmail.com> (https://github.com/median-man)",
+  "author": "David Luu <dluu.audeo@gmail.com> (https://github.com/MaestroLuu)",
   "license": "MIT",
   "dependencies": {
     "console.table": "^0.10.0",

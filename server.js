@@ -127,7 +127,6 @@ function updateEmployeeRole() {
       name: `${employee.first_name} ${employee.last_name}`,
       value: employee.id,
     }));
-    console.log(employeeNames);
     db.query("SELECT * FROM role", function (err, results) {
       if (err) throw err;
       const employeeRoles = results.map((roles) => ({
