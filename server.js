@@ -34,14 +34,8 @@ function mainMenu() {
           updateEmployeeRole();
           break;
         case "View All Roles":
-          db.query("SELECT * FROM role;", function (err, results) {
-            let choices = results.map((role) => ({
-              id: `${role.id}`,
-              title: `${role.title}`,
-              department: `${role.department_id}`,
-              salary: `${role.salary}`
-            }));
-            console.table(choices);
+          db.query("SELECT r.id, r.title, r.salary, d.name AS department FROM role AS r JOIN department AS d ON r.department_id = d.id;", function (err, results) {
+            console.table(results);
             mainMenu();
           })
           break;
@@ -50,17 +44,35 @@ function mainMenu() {
           break;
         case "View All Departments":
           db.query('SELECT * FROM department', function (err, results) {
-            let choices = results.map((department) => ({
-              id: `${department.id}`,
-              department: `${department.name}`
-            }));
-            console.table(choices);
+            console.table(results);
             mainMenu();
           })
           break;
         case "Add Department":
           addDepartment();
           break;
+        // Following additional cases and functions to be developed in future updates
+        // case "Update Employee Manager":
+        //   updateEmployeeManager();
+        //   break;
+        // case "View Employees by Manager":
+        //   viewEmployeeByManager();
+        //   break;
+        // case "View Employees by Department":
+        //   updateEmployeeByDepartment();
+        //   break;
+        // case "Delete Department":
+        //   deleteDepartment();
+        //   break;
+        // case "Delete Roles":
+        //   deleteRoles();
+        //   break;
+        // case "Delete Employees":
+        //   deleteEmployee();
+        //   break;
+        // case "View Department Budget":
+        //   viewDepartmentBudget();
+        //   break;
       }
     });
 }
@@ -156,8 +168,6 @@ function updateEmployeeRole() {
             }
             db.query(sql, obj, function (err, result) {
               if (err) throw err;
-              // will modify to display name instead of id in future updates
-              // console.log(JSON.stringify(response.employeeName) + ' has been updated to database.');
               mainMenu();
             });
           });
